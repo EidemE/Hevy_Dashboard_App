@@ -20,8 +20,8 @@ The app focuses on three areas:
 
 ## Download
 
-- **Android (Play Store):** https://play.google.com/store/apps/details?id=your.placeholder.app
-- **Web (Docker Hub image):** https://hub.docker.com/r/your-placeholder/hevy-dashboard
+- **Android (Play Store):** https://play.google.com/store/apps/details?id=arbitro.android.hevy_dashboard_app
+- **Web (Docker Hub image):** https://hub.docker.com/r/eideme/hevy-dashboard-app
 
 For the web version, hosting remains your responsibility.
 

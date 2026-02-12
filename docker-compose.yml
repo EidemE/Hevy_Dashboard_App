@@ -1,9 +1,11 @@
 version: '3.8'
 
 services:
-  hevy-dashboard:
-    build: .
-    ports:
-      - "8080:80"
-    restart: unless-stopped
-    container_name: hevy-dashboard-web
+    hevy-dashboard-app:
+      build: .
+      ports:
+        - "80:80"
+      restart: always
+      container_name: hevy-dashboard-web
+      environment:
+        - FLUTTER_ENV=production
