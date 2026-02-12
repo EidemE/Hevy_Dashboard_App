@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  hevy-dashboard:
+    build: .
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    container_name: hevy-dashboard-web

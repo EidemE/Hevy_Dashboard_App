@@ -1,0 +1,173 @@
+{
+  "@@locale": "fr",
+  
+  "appTitle": "Hevy Dashboard",
+  "@appTitle": {
+    "description": "Titre de l'application"
+  },
+
+  "dashboard": "Dashboard",
+  "exercises": "Exercices",
+  "import": "Importer",
+  "monthlyStats": "Stats mensuelles",
+  
+  "topExercises": "Top Exercices",
+  "seeAll": "Voir tout",
+  "noExercise": "Aucun exercice",
+  "noExerciseDesc": "Importez vos données CSV pour commencer",
+  
+  "workoutsCompleted": "Entraînements effectués",
+  "differentExercises": "Exercices différents",
+  "setsCompleted": "Sets effectués",
+  "totalWeight": "Poids total soulevé",
+  
+  "sessions": "Séances",
+  "sets": "Sets",
+  "max": "Max",
+  "total": "Total",
+  "last": "Dernier",
+  
+  "today": "Aujourd'hui",
+  "yesterday": "Hier",
+  
+  "repsProgressionTitle": "Progression des répétitions",
+  "weightRepsProgressionTitle": "Progression poids & reps",
+  "maxWeightProgressionTitle": "Progression du poids maximum",
+  
+  "allExercises": "Tous les exercices",
+  "allExercisesCount": "Tous les exercices ({count})",
+  "@allExercisesCount": {
+    "description": "Titre avec compte d'exercices",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "changeSorting": "Changer le tri",
+  "sortByWorkouts": "Nombre de séances",
+  "sortBySets": "Nombre de sets",
+  "sortByMaxWeight": "Poids maximum",
+  "sortByTotalWeight": "Poids total",
+  "sortByName": "Nom",
+  
+  "sortLabelWorkouts": "Par séances",
+  "sortLabelSets": "Par sets",
+  "sortLabelWeight": "Par poids",
+  "sortLabelTotal": "Par total",
+  "sortLabelName": "Par nom",
+  
+  "searchExercises": "Rechercher un exercice...",
+  "noExercisesFound": "Aucun exercice trouvé",
+  "noExercisesFoundDesc": "Essayez de modifier votre recherche",
+  
+  "importData": "Importer mes données",
+  "importDataDesc": "Importez votre fichier CSV exporté depuis Hevy",
+  "selectFile": "Sélectionner un fichier",
+  "importInProgress": "Import en cours...",
+  "importSuccess": "Import réussi !",
+  "importSuccessDesc": "{count} séances importées",
+  "@importSuccessDesc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importError": "Erreur d'import",
+  "dataAlreadyImported": "Données déjà importées",
+  "dataAlreadyImportedDesc": "Voulez-vous réimporter ?",
+  "reimport": "Réimporter",
+  "cancel": "Annuler",
+  
+  "monthlyStatsTitle": "Statistiques mensuelles",
+  "monthlyStatsDesc": "Évolution de vos performances à travers les mois",
+  "noData": "Aucune donnée",
+  "noDataDesc": "Importez vos données CSV pour voir vos statistiques",
+  
+  "noSession": "Aucune séance",
+  "totalTime": "Temps total",
+  "avgTime": "Temps moy.",
+  "differentExercisesShort": "Exercices diff.",
+  "exercisesPerSession": "Exo./séance",
+  "avgWeightPerSession": "Poids moy./séance",
+  
+  "all": "Toutes",
+  
+  "kg": "kg",
+  "reps": "reps",
+  "tons": "t",
+  
+  "info": "Infos",
+  "openHevy": "Ouvrir Hevy",
+  "cannotOpenHevy": "Impossible d'ouvrir l'application Hevy",
+  "globalStats": "Statistiques globales",
+  "activity": "Activité",
+  "performance30Days": "Performance (30 derniers jours)",
+  "seeMore": "Voir plus",
+  "clear": "Effacer",
+  "howToImportHevy": "Comment importer vos données Hevy",
+  "hideInstructions": "Masquer les instructions",
+  "importInstructions": "Pour analyser vos entraînements, vous devez exporter vos données depuis l'application Hevy :",
+  "step1": "Ouvrez l'application Hevy sur votre téléphone",
+  "step2": "Allez dans Profil > Paramètres",
+  "step3": "Sélectionnez \"Exporter et importer des données\"",
+  "step4": "Appuyez sur \"Exporter les données\"",
+  "step5": "Choisissez \"Exporter les entraînements\"",
+  "twoWaysToImport": "Deux façons d'importer",
+  "importWay1": "• Cliquez sur \"Importer CSV\" ci-dessus et sélectionnez le fichier",
+  "importWay2": "• Partagez directement le fichier CSV depuis Hevy vers cette application",
+  "noDataImported": "Aucune donnée importée",
+  "clickToStart": "Cliquez sur \"Importer CSV\" pour commencer",
+  "confirmation": "Confirmation",
+  "confirmClear": "Êtes-vous sûr de vouloir effacer toutes les données importées ?",
+  "workoutsImported": "{count} entraînement(s) importé(s)",
+  "@workoutsImported": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importedOn": "Importé(s) le {date}",
+  "@importedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+
+  "evolution": "Évolution",
+  "close": "Fermer",
+  "viewOnGithub": "Voir la page GitHub",
+  "infoDialogDescription1": "Hevy Dashboard est une application qui transforme vos exports d'entraînement Hevy en un tableau de bord de statistiques clair et interactif. Importez votre CSV Hevy et explorez votre historique, vos tendances et vos progrès en un seul endroit.",
+  "infoDialogDescription2": "Cette application est open-source sous licence MIT et n'est ni officielle ni affiliée à Hevy Studios.",
+  "infoDialogDisclaimer": "Vous pouvez sur la page GitHub proposer des modifications, des améliorations et signaler des bugs avec l'application.",
+  "infoDialogDeveloper": "EidemE",
+  "routeNotFound": "Route non trouvée : {name}",
+  "@routeNotFound": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionCount": "{count, plural, one{# séance} other{# séances}}",
+  "@sessionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exerciseCount": "{count, plural, one{# exercice} other{# exercices}}",
+  "@exerciseCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

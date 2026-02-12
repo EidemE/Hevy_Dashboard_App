@@ -1,0 +1,54 @@
+name: hevy_dashboard_app
+description: "Hevy Dashboard"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  fl_chart: ^1.1.1
+
+  provider: ^6.1.2
+
+  http: ^1.2.2
+
+  intl: ^0.20.2
+
+  file_picker: ^8.1.4
+  csv: ^6.0.0
+  shared_preferences: ^2.3.5
+  path_provider: ^2.1.4
+
+  receive_sharing_intent: ^1.8.0
+
+  url_launcher: ^6.2.4
+
+  diacritic: ^0.1.5
+
+  font_awesome_flutter: ^10.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+flutter:
+  generate: true
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  image_path: "assets/icon/app_icon_bg.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/icon/app_icon.png"
+  web:
+    generate: true
+    image_path: "assets/icon/app_icon_bg.png"

@@ -1,0 +1,35 @@
+# Flutter build files
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Keys and secrets
+*.jks
+*.keystore
+android/key.properties
+upload-keystore.jks
+
+# Android/iOS
+android/
+ios/
+macos/
+linux/
+windows/
+
+# Documentation
+README.md
+*.md
+
+# Tests
+test/
