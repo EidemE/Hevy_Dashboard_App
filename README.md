@@ -1,4 +1,7 @@
 # Hevy Dashboard
+![Version](https://img.shields.io/github/v/release/eideme/hevy_dashboard_app)
+[![Docker](https://img.shields.io/badge/Docker-Hub-2496ED?logo=docker&logoColor=white)](https://hub.docker.com/r/eideme/hevy-dashboard-app)
+[![Google Play](https://img.shields.io/badge/Google_Play-Download-34A853?logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=arbitro.android.hevy_dashboard_app)
 
 Hevy Dashboard is a Flutter app that turns your Hevy workout exports into a clean, interactive statistics dashboard. Import your Hevy CSV and explore your training history, trends, and progress in one place.
 
