@@ -148,7 +148,37 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get importError => 'Erreur d\'import';
+  String get importError => 'Erreur d\'importation';
+
+  @override
+  String get importErrorSavedDataCorrupted =>
+      'Les données sauvegardées étaient corrompues et ont été effacées. Veuillez réimporter votre fichier CSV.';
+
+  @override
+  String get importErrorNotHevy =>
+      'Ce fichier ne provient pas de l\'application Hevy. Veuillez exporter vos données depuis Hevy et réessayer.';
+
+  @override
+  String get importErrorEmptyCsv =>
+      'Le fichier CSV est vide. Veuillez vérifier votre export depuis Hevy.';
+
+  @override
+  String get importErrorNoData => 'Le fichier CSV ne contient aucune donnée.';
+
+  @override
+  String get importErrorInvalidFormat =>
+      'Le format du fichier n\'est pas valide. Assurez-vous d\'importer un fichier CSV non modifié depuis Hevy.';
+
+  @override
+  String get importErrorReadFile =>
+      'Impossible de lire le fichier. Veuillez réessayer.';
+
+  @override
+  String get importErrorInvalidFilePath => 'Chemin de fichier invalide.';
+
+  @override
+  String get importErrorGeneric =>
+      'Impossible d\'importer le fichier. Vérifiez qu\'il s\'agit bien d\'un export Hevy au format CSV.';
 
   @override
   String get dataAlreadyImported => 'Données déjà importées';
@@ -158,6 +188,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get reimport => 'Réimporter';
+
+  @override
+  String get importCsv => 'Importer CSV';
+
+  @override
+  String get reimportCsv => 'Réimporter CSV';
 
   @override
   String get cancel => 'Annuler';
@@ -231,6 +267,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get clear => 'Effacer';
 
   @override
+  String get importReminderTitle => 'Vous avez fait des exercices ?';
+
+  @override
+  String get importReminderBody =>
+      'N\'oubliez pas de les importer dans votre appli pour suivre vos avancées.';
+
+  @override
   String get howToImportHevy => 'Comment importer vos données Hevy';
 
   @override
@@ -250,7 +293,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get step3 => 'Sélectionnez \"Exporter et importer des données\"';
 
   @override
-  String get step4 => 'Appuyez sur \"Exporter les données\"';
+  String get step4 => 'Appuyez sur \"Exporter les Données\"';
 
   @override
   String get step5 => 'Choisissez \"Exporter les entraînements\"';

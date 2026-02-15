@@ -87,19 +87,42 @@ class CsvData {
     );
   }
 
-  // Date parsing
-  static DateTime _parseFrenchDate(String dateStr) {
-    try {
-      final DateFormat format = DateFormat("d MMM. yyyy, HH:mm", "fr_FR");
-      return format.parse(dateStr);
-    } catch (e) {
+  // Date parsing (exports may vary by device language/locale)
+  static DateTime _parseLocalizedDate(String dateStr) {
+    final String raw = dateStr.trim();
+    if (raw.isEmpty) {
+      throw FormatException('Date vide');
+    }
+
+    final List<String> candidates = <String>{
+      raw,
+      raw.replaceAll('.', ''),
+      raw.replaceAll(' at ', ', ').replaceAll(' à ', ', '),
+    }.toList();
+
+    for (final String candidate in candidates) {
       try {
-        final DateFormat format = DateFormat("d MMM yyyy, HH:mm", "fr_FR");
-        return format.parse(dateStr);
-      } catch (e2) {
-        return DateTime.parse(dateStr);
+        return DateTime.parse(candidate);
+      } catch (_) {}
+    }
+
+    final List<String> locales = DateFormat.allLocalesWithSymbols();
+
+    const List<String> patterns = <String>[
+      'd MMM yyyy, HH:mm',
+    ];
+
+    for (final String candidate in candidates) {
+      for (final String locale in locales) {
+        for (final String pattern in patterns) {
+          try {
+            return DateFormat(pattern, locale).parseStrict(candidate);
+          } catch (_) {}
+        }
       }
     }
+
+    throw FormatException('Format de date non supporté: $dateStr');
   }
 
   // CSV parsing
@@ -117,8 +140,8 @@ class CsvData {
           currentWorkout = Workout(
             name: row[0].toString(),
             description: row[3].toString(),
-            dateStart: _parseFrenchDate(row[1].toString()),
-            dateEnd: _parseFrenchDate(row[2].toString()),
+            dateStart: _parseLocalizedDate(row[1].toString()),
+            dateEnd: _parseLocalizedDate(row[2].toString()),
             exercises: [],
           );
         }
@@ -156,6 +179,10 @@ class CsvData {
         );
         currentWorkout.exercises.last.sets.add(currentSet);
       }
+    }
+
+    if (currentWorkout != null && currentWorkout.exercises.isNotEmpty) {
+      workouts.add(currentWorkout);
     }
 
     return CsvData(workouts: workouts, importedAt: DateTime.now());

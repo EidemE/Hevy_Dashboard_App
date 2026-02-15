@@ -229,12 +229,12 @@ class _ExerciseChartCardState extends State<ExerciseChartCard> {
 
   String _getChartTitle() {
     if (_isBodyweight) {
-      return 'Progression des répétitions';
+      return AppLocalizations.of(context)!.repsProgressionTitle;
     }
     if (_isDualChart) {
-      return 'Progression poids & reps';
+      return AppLocalizations.of(context)!.weightRepsProgressionTitle;
     }
-    return 'Progression du poids maximum';
+    return AppLocalizations.of(context)!.maxWeightProgressionTitle;
   }
 
   List<String> _getAvailableYears(List<_ExerciseDataPoint> history) {
