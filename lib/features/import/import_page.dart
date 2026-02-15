@@ -37,8 +37,8 @@ class _ImportPageState extends State<ImportPage> {
                 const SizedBox(height: 16),
 
                 // Error
-                if (provider.error != null) ...[
-                  _buildErrorCard(provider.error!),
+                if (provider.errorType != null) ...[
+                  _buildErrorCard(provider.errorType!),
                   const SizedBox(height: 16),
                 ],
 
@@ -49,13 +49,13 @@ class _ImportPageState extends State<ImportPage> {
                 ],
 
                 // Instructions
-                if ((!provider.hasData || provider.error != null) && !provider.isLoading && _showInstructions) ...[
+                if ((!provider.hasData || provider.errorType != null) && !provider.isLoading && _showInstructions) ...[
                   _buildInstructionsCard(),
                   const SizedBox(height: 16),
                 ],
 
                 // Empty state
-                if (!provider.hasData && !provider.isLoading && provider.error == null)
+                if (!provider.hasData && !provider.isLoading && provider.errorType == null)
                   _buildEmptyState(),
                 ],
               ),
@@ -86,7 +86,8 @@ class _ImportPageState extends State<ImportPage> {
     );
   }
 
-  Widget _buildErrorCard(String error) {
+  Widget _buildErrorCard(ImportErrorType errorType) {
+    final localizations = AppLocalizations.of(context)!;
     return Card(
       color: Theme.of(context).colorScheme.errorContainer,
       elevation: 4,
@@ -105,7 +106,7 @@ class _ImportPageState extends State<ImportPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Erreur d\'importation',
+                    AppLocalizations.of(context)!.importError,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onErrorContainer,
                       fontWeight: FontWeight.bold,
@@ -114,7 +115,7 @@ class _ImportPageState extends State<ImportPage> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    error,
+                    _localizeImportError(localizations, errorType),
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onErrorContainer,
                     ),
@@ -135,8 +136,33 @@ class _ImportPageState extends State<ImportPage> {
     );
   }
 
+  String _localizeImportError(
+    AppLocalizations localizations,
+    ImportErrorType errorType,
+  ) {
+    switch (errorType) {
+      case ImportErrorType.savedDataCorrupted:
+        return localizations.importErrorSavedDataCorrupted;
+      case ImportErrorType.notHevy:
+        return localizations.importErrorNotHevy;
+      case ImportErrorType.emptyCsv:
+        return localizations.importErrorEmptyCsv;
+      case ImportErrorType.noData:
+        return localizations.importErrorNoData;
+      case ImportErrorType.invalidFormat:
+        return localizations.importErrorInvalidFormat;
+      case ImportErrorType.readFile:
+        return localizations.importErrorReadFile;
+      case ImportErrorType.invalidFilePath:
+        return localizations.importErrorInvalidFilePath;
+      case ImportErrorType.generic:
+        return localizations.importErrorGeneric;
+    }
+  }
+
   Widget _buildInfoCard(ImportProvider provider) {
-    final dateFormat = DateFormat('dd/MM/yyyy à HH:mm');
+    final localizations = AppLocalizations.of(context)!;
+    final dateFormat = DateFormat.yMd(localizations.localeName).add_Hm();
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Card(
       color: isDark ? Colors.green[900]!.withValues(alpha: 0.2) : Colors.green[50],
@@ -151,7 +177,7 @@ class _ImportPageState extends State<ImportPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppLocalizations.of(context)!.workoutsImported(provider.data.fold<int>(0, (sum, csvData) => sum + csvData.workouts.length)),
+                    localizations.workoutsImported(provider.data.fold<int>(0, (sum, csvData) => sum + csvData.workouts.length)),
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: isDark ? Colors.green[300] : Colors.green[700],
@@ -159,7 +185,7 @@ class _ImportPageState extends State<ImportPage> {
                   ),
                   if (provider.lastImportDate != null)
                     Text(
-                      AppLocalizations.of(context)!.importedOn(dateFormat.format(provider.lastImportDate!)),
+                      localizations.importedOn(dateFormat.format(provider.lastImportDate!)),
                       style: TextStyle(
                         fontSize: 12,
                         color: isDark ? Colors.green[400] : Colors.green[700],
@@ -355,7 +381,7 @@ class _ImportPageState extends State<ImportPage> {
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context)!.confirmation),
         content: Text(
-          'Êtes-vous sûr de vouloir effacer toutes les données importées ?',
+          AppLocalizations.of(context)!.confirmClear,
         ),
         actions: [
           TextButton(

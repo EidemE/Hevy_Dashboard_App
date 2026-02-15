@@ -151,6 +151,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importError => 'Import error';
 
   @override
+  String get importErrorSavedDataCorrupted =>
+      'Saved data was corrupted and has been cleared. Please reimport your CSV file.';
+
+  @override
+  String get importErrorNotHevy =>
+      'This file is not from Hevy. Export your data from Hevy and try again.';
+
+  @override
+  String get importErrorEmptyCsv =>
+      'The CSV file is empty. Check your export from Hevy.';
+
+  @override
+  String get importErrorNoData => 'The CSV file contains no data.';
+
+  @override
+  String get importErrorInvalidFormat =>
+      'The file format is not valid. Make sure you import an unmodified CSV from Hevy.';
+
+  @override
+  String get importErrorReadFile =>
+      'Unable to read the file. Please try again.';
+
+  @override
+  String get importErrorInvalidFilePath => 'Invalid file path.';
+
+  @override
+  String get importErrorGeneric =>
+      'Unable to import the file. Make sure it is a Hevy CSV export.';
+
+  @override
   String get dataAlreadyImported => 'Data already imported';
 
   @override
@@ -158,6 +188,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reimport => 'Reimport';
+
+  @override
+  String get importCsv => 'Import CSV';
+
+  @override
+  String get reimportCsv => 'Reimport CSV';
 
   @override
   String get cancel => 'Cancel';
@@ -230,6 +266,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clear => 'Clear';
 
   @override
+  String get importReminderTitle => 'Did you work out?';
+
+  @override
+  String get importReminderBody =>
+      'Don\"t forget to import them into your app to track your progress.';
+
+  @override
   String get howToImportHevy => 'How to import your Hevy data';
 
   @override
@@ -246,13 +289,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get step2 => 'Go to Profile > Settings';
 
   @override
-  String get step3 => 'Select \"Export and import data\"';
+  String get step3 => 'Select \"Export and Import Data\"';
 
   @override
-  String get step4 => 'Tap \"Export data\"';
+  String get step4 => 'Tap \"Export Data\"';
 
   @override
-  String get step5 => 'Choose \"Export workouts\"';
+  String get step5 => 'Choose \"Export Workouts\"';
 
   @override
   String get twoWaysToImport => 'Two ways to import';

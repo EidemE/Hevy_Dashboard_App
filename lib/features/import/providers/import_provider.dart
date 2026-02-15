@@ -8,6 +8,26 @@ import '../../../core/services/csv_service.dart';
 import '../../../core/services/stats_service.dart';
 import '../../../core/services/storage_service.dart';
 
+enum ImportErrorType {
+  savedDataCorrupted,
+  notHevy,
+  emptyCsv,
+  noData,
+  invalidFormat,
+  readFile,
+  invalidFilePath,
+  generic,
+}
+
+class ImportException implements Exception {
+  final ImportErrorType type;
+
+  ImportException(this.type);
+
+  @override
+  String toString() => 'ImportException($type)';
+}
+
 class ImportProvider extends ChangeNotifier {
   final CsvService _csvService = CsvService();
   final StatsService _statsService = StatsService();
@@ -16,20 +36,20 @@ class ImportProvider extends ChangeNotifier {
   List<CsvData> _data = [];
   List<ExerciseStats> _exerciseStats = [];
   bool _isLoading = false;
-  String? _error;
+  ImportErrorType? _errorType;
   DateTime? _lastImportDate;
 
   List<CsvData> get data => _data;
   List<ExerciseStats> get exerciseStats => _exerciseStats;
   bool get isLoading => _isLoading;
-  String? get error => _error;
+  ImportErrorType? get errorType => _errorType;
   DateTime? get lastImportDate => _lastImportDate;
   bool get hasData => _data.isNotEmpty;
 
   // Charger les données au démarrage
   Future<void> loadSavedData() async {
     _isLoading = true;
-    _error = null;
+    _errorType = null;
     notifyListeners();
 
     try {
@@ -41,7 +61,7 @@ class ImportProvider extends ChangeNotifier {
     } catch (e) {
       // Si les données sont corrompues, les effacer
       debugPrint('Erreur lors du chargement des données: $e');
-      _error = 'Les données sauvegardées sont corrompues et ont été effacées. Veuillez réimporter votre fichier CSV.';
+      _errorType = ImportErrorType.savedDataCorrupted;
       await _storageService.clearCsvData();
       _data = [];
       _exerciseStats = [];
@@ -67,7 +87,7 @@ class ImportProvider extends ChangeNotifier {
       }
 
       _isLoading = true;
-      _error = null;
+      _errorType = null;
       notifyListeners();
 
       final PlatformFile file = result.files.first;
@@ -77,13 +97,13 @@ class ImportProvider extends ChangeNotifier {
       if (kIsWeb) {
         // Sur Web, utiliser bytes
         if (file.bytes == null) {
-          throw Exception('Impossible de lire le fichier');
+          throw ImportException(ImportErrorType.readFile);
         }
         csvContent = utf8.decode(file.bytes!);
       } else {
         // Sur mobile, utiliser le chemin
         if (file.bytes == null) {
-          throw Exception('Chemin de fichier invalide');
+          throw ImportException(ImportErrorType.invalidFilePath);
         }
         csvContent = utf8.decode(file.bytes!);
       }
@@ -93,7 +113,7 @@ class ImportProvider extends ChangeNotifier {
 
       // Valider les données
       if (!_csvService.validateCsvFormat(parsedData)) {
-        throw Exception('Format CSV invalide');
+        throw ImportException(ImportErrorType.invalidFormat);
       }
 
       // Sauvegarder (écrase les données précédentes)
@@ -105,18 +125,10 @@ class ImportProvider extends ChangeNotifier {
       _exerciseStats = _statsService.calculateExerciseStats(_data);
       await _storageService.saveExerciseStats(_exerciseStats);
 
-      _error = null;
+      _errorType = null;
     } catch (e) {
       debugPrint('Erreur technique lors de l\'importation: $e');
-      if (e.toString().contains('Vous devez importer un fichier CSV')) {
-        _error = 'Ce fichier ne provient pas de l\'application Hevy. Veuillez exporter vos données depuis Hevy et réessayer.';
-      } else if (e.toString().contains('CSV est vide')) {
-        _error = 'Le fichier CSV est vide. Veuillez vérifier votre export depuis Hevy.';
-      } else if (e.toString().contains('Format CSV invalide')) {
-        _error = 'Le format du fichier n\'est pas valide. Assurez-vous d\'importer un fichier CSV non modifié depuis Hevy.';
-      } else {
-        _error = 'Impossible d\'importer le fichier. Vérifiez qu\'il s\'agit bien d\'un export Hevy au format CSV.';
-      }
+      _errorType = _mapImportException(e);
       // Ne pas effacer les données existantes en cas d'erreur
       // _data reste inchangé pour conserver l'import précédent
     } finally {
@@ -128,10 +140,13 @@ class ImportProvider extends ChangeNotifier {
   // Importer depuis un chemin de fichier (pour le partage Android)
   Future<void> importCsvFromPath(String filePath) async {
     _isLoading = true;
-    _error = null;
+    _errorType = null;
     notifyListeners();
 
     try {
+      if (filePath.trim().isEmpty) {
+        throw ImportException(ImportErrorType.invalidFilePath);
+      }
       // Lire le fichier depuis le chemin
       final file = File(filePath);
       final bytes = await file.readAsBytes();
@@ -142,7 +157,7 @@ class ImportProvider extends ChangeNotifier {
 
       // Valider les données
       if (!_csvService.validateCsvFormat(parsedData)) {
-        throw Exception('Format CSV invalide');
+        throw ImportException(ImportErrorType.invalidFormat);
       }
 
       // Sauvegarder
@@ -154,18 +169,10 @@ class ImportProvider extends ChangeNotifier {
       _exerciseStats = _statsService.calculateExerciseStats(_data);
       await _storageService.saveExerciseStats(_exerciseStats);
 
-      _error = null;
+      _errorType = null;
     } catch (e) {
       debugPrint('Erreur technique lors de l\'importation depuis le partage: $e');
-      if (e.toString().contains('Vous devez importer un fichier CSV')) {
-        _error = 'Ce fichier ne provient pas de l\'application Hevy. Veuillez exporter vos données depuis Hevy et réessayer.';
-      } else if (e.toString().contains('CSV est vide')) {
-        _error = 'Le fichier CSV est vide. Veuillez vérifier votre export depuis Hevy.';
-      } else if (e.toString().contains('Format CSV invalide')) {
-        _error = 'Le format du fichier n\'est pas valide. Assurez-vous d\'importer un fichier CSV non modifié depuis Hevy.';
-      } else {
-        _error = 'Impossible d\'importer le fichier. Vérifiez qu\'il s\'agit bien d\'un export Hevy au format CSV.';
-      }
+      _errorType = _mapImportException(e);
       // Ne pas effacer les données existantes en cas d'erreur
       // _data reste inchangé pour conserver l'import précédent
     } finally {
@@ -184,9 +191,9 @@ class ImportProvider extends ChangeNotifier {
       _data = [];
       _exerciseStats = [];
       _lastImportDate = null;
-      _error = null;
+      _errorType = null;
     } catch (e) {
-      _error = e.toString();
+      _errorType = ImportErrorType.generic;
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -195,7 +202,29 @@ class ImportProvider extends ChangeNotifier {
 
   // Effacer l'erreur
   void clearError() {
-    _error = null;
+    _errorType = null;
     notifyListeners();
+  }
+
+  ImportErrorType _mapImportException(Object error) {
+    if (error is ImportException) {
+      return error.type;
+    }
+    if (error is FileSystemException || error is FormatException) {
+      return ImportErrorType.readFile;
+    }
+    if (error is CsvParseException) {
+      switch (error.type) {
+        case CsvParseErrorType.emptyCsv:
+          return ImportErrorType.emptyCsv;
+        case CsvParseErrorType.invalidHeaderCount:
+          return ImportErrorType.notHevy;
+        case CsvParseErrorType.noDataRows:
+          return ImportErrorType.noData;
+        case CsvParseErrorType.parseFailed:
+          return ImportErrorType.generic;
+      }
+    }
+    return ImportErrorType.generic;
   }
 }

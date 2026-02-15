@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../l10n/app_localizations.dart';
 import '../providers/import_provider.dart';
 
 class ImportButton extends StatelessWidget {
@@ -19,7 +20,9 @@ class ImportButton extends StatelessWidget {
                 )
               : const Icon(Icons.upload_file),
           label: Text(
-            provider.hasData ? 'Réimporter CSV' : 'Importer CSV',
+            provider.hasData
+                ? AppLocalizations.of(context)!.reimportCsv
+                : AppLocalizations.of(context)!.importCsv,
           ),
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),

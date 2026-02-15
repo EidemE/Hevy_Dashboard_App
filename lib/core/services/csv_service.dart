@@ -1,6 +1,22 @@
 import 'package:csv/csv.dart';
 import '../models/csv_data.dart';
-import 'package:flutter/foundation.dart';
+
+enum CsvParseErrorType {
+  emptyCsv,
+  invalidHeaderCount,
+  noDataRows,
+  parseFailed,
+}
+
+class CsvParseException implements Exception {
+  final CsvParseErrorType type;
+  final Object? cause;
+
+  CsvParseException(this.type, {this.cause});
+
+  @override
+  String toString() => 'CsvParseException($type)';
+}
 
 class CsvService {
   // Parser un fichier CSV depuis son contenu texte
@@ -17,22 +33,22 @@ class CsvService {
       ).convert(csvContent);
 
       if (rows.isEmpty) {
-        throw Exception('Le fichier CSV est vide');
+        throw CsvParseException(CsvParseErrorType.emptyCsv);
       }
 
       // La première ligne contient les en-têtes
       final List<String> headers = rows.first
           .map((dynamic e) => e.toString())
           .toList();
-      if (!listEquals(headers, ["title","start_time","end_time","description","exercise_title","superset_id","exercise_notes","set_index","set_type","weight_kg","reps","distance_km","duration_seconds","rpe"])) {
-        throw Exception('Vous devez importer un fichier CSV de données d\'entraînement de l\'application Hevy');
+      if (headers.length != 14) {
+        throw CsvParseException(CsvParseErrorType.invalidHeaderCount);
       }
 
       // Les autres lignes contiennent les données
       final List<List<dynamic>> dataRows = rows.skip(1).toList();
 
       if (dataRows.isEmpty) {
-        throw Exception('Le fichier CSV ne contient aucune donnée');
+        throw CsvParseException(CsvParseErrorType.noDataRows);
       }
 
       // Parser toutes les lignes en une seule fois
@@ -40,7 +56,10 @@ class CsvService {
 
       return <CsvData>[csvData];
     } catch (e) {
-      throw Exception('Erreur lors du parsing CSV: $e');
+      if (e is CsvParseException) {
+        rethrow;
+      }
+      throw CsvParseException(CsvParseErrorType.parseFailed, cause: e);
     }
   }
 

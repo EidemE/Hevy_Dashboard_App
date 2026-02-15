@@ -1,7 +1,7 @@
 name: hevy_dashboard_app
 description: "Hevy Dashboard"
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.1.0+2
 
 environment:
   sdk: ^3.10.7
@@ -26,6 +26,9 @@ dependencies:
   csv: ^6.0.0
   shared_preferences: ^2.3.5
   path_provider: ^2.1.4
+  flutter_local_notifications: ^17.1.2
+  timezone: ^0.9.4
+  android_alarm_manager_plus: ^4.0.3
 
   receive_sharing_intent: ^1.8.0
 

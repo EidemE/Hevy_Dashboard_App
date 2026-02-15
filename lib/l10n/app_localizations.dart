@@ -374,6 +374,54 @@ abstract class AppLocalizations {
   /// **'Import error'**
   String get importError;
 
+  /// No description provided for @importErrorSavedDataCorrupted.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved data was corrupted and has been cleared. Please reimport your CSV file.'**
+  String get importErrorSavedDataCorrupted;
+
+  /// No description provided for @importErrorNotHevy.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is not from Hevy. Export your data from Hevy and try again.'**
+  String get importErrorNotHevy;
+
+  /// No description provided for @importErrorEmptyCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'The CSV file is empty. Check your export from Hevy.'**
+  String get importErrorEmptyCsv;
+
+  /// No description provided for @importErrorNoData.
+  ///
+  /// In en, this message translates to:
+  /// **'The CSV file contains no data.'**
+  String get importErrorNoData;
+
+  /// No description provided for @importErrorInvalidFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'The file format is not valid. Make sure you import an unmodified CSV from Hevy.'**
+  String get importErrorInvalidFormat;
+
+  /// No description provided for @importErrorReadFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to read the file. Please try again.'**
+  String get importErrorReadFile;
+
+  /// No description provided for @importErrorInvalidFilePath.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid file path.'**
+  String get importErrorInvalidFilePath;
+
+  /// No description provided for @importErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to import the file. Make sure it is a Hevy CSV export.'**
+  String get importErrorGeneric;
+
   /// No description provided for @dataAlreadyImported.
   ///
   /// In en, this message translates to:
@@ -391,6 +439,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reimport'**
   String get reimport;
+
+  /// No description provided for @importCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Import CSV'**
+  String get importCsv;
+
+  /// No description provided for @reimportCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Reimport CSV'**
+  String get reimportCsv;
 
   /// No description provided for @cancel.
   ///
@@ -530,6 +590,18 @@ abstract class AppLocalizations {
   /// **'Clear'**
   String get clear;
 
+  /// No description provided for @importReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you work out?'**
+  String get importReminderTitle;
+
+  /// No description provided for @importReminderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\"t forget to import them into your app to track your progress.'**
+  String get importReminderBody;
+
   /// No description provided for @howToImportHevy.
   ///
   /// In en, this message translates to:
@@ -563,19 +635,19 @@ abstract class AppLocalizations {
   /// No description provided for @step3.
   ///
   /// In en, this message translates to:
-  /// **'Select \"Export and import data\"'**
+  /// **'Select \"Export and Import Data\"'**
   String get step3;
 
   /// No description provided for @step4.
   ///
   /// In en, this message translates to:
-  /// **'Tap \"Export data\"'**
+  /// **'Tap \"Export Data\"'**
   String get step4;
 
   /// No description provided for @step5.
   ///
   /// In en, this message translates to:
-  /// **'Choose \"Export workouts\"'**
+  /// **'Choose \"Export Workouts\"'**
   String get step5;
 
   /// No description provided for @twoWaysToImport.

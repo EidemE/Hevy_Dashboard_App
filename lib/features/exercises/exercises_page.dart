@@ -232,13 +232,13 @@ class _ExercisesPageState extends State<ExercisesPage> {
       case 'workouts':
         return AppLocalizations.of(context)!.sortLabelWorkouts;
       case 'sets':
-        return 'Par sets';
+        return AppLocalizations.of(context)!.sortLabelSets;
       case 'weight':
-        return 'Par poids';
+        return AppLocalizations.of(context)!.sortLabelWeight;
       case 'totalWeight':
-        return 'Par total';
+        return AppLocalizations.of(context)!.sortLabelTotal;
       case 'name':
-        return 'Par nom';
+        return AppLocalizations.of(context)!.sortLabelName;
       default:
         return '';
     }

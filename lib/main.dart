@@ -5,6 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'core/services/notification_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/routing/app_router.dart';
 import 'features/import/providers/import_provider.dart';
@@ -28,13 +29,25 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   StreamSubscription? _intentSubscription;
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   late final ImportProvider _importProvider;
+  DateTime? _lastScheduledImportDate;
+  bool _webReminderShown = false;
+  Timer? _webReminderTimer;
+  static const Duration _importReminderDelay = Duration(days: 3);
 
   @override
   void initState() {
     super.initState();
     
     // Provider
-    _importProvider = ImportProvider()..loadSavedData();
+    _importProvider = ImportProvider();
+    _importProvider.addListener(_handleImportUpdates);
+    
+    // Load data then check for reminder
+    _importProvider.loadSavedData().then((_) {
+      _handleImportUpdates();
+    });
+
+    NotificationService.instance.init();
     
     // Lifecycle
     WidgetsBinding.instance.addObserver(this);
@@ -90,10 +103,101 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
   }
 
+  void _handleImportUpdates() {
+    final lastImport = _importProvider.lastImportDate;
+
+    if (lastImport == null) {
+      _lastScheduledImportDate = null;
+      _webReminderTimer?.cancel();
+      _webReminderTimer = null;
+      NotificationService.instance.cancelImportReminder();
+      return;
+    }
+
+    if (_lastScheduledImportDate == null || !_isSameMoment(lastImport, _lastScheduledImportDate!)) {
+      _lastScheduledImportDate = lastImport;
+      _webReminderShown = false;
+      _scheduleImportReminder(lastImport);
+      _scheduleWebReminderTimer(lastImport);
+    }
+
+    _maybeShowWebReminder(lastImport);
+  }
+
+  void _scheduleWebReminderTimer(DateTime lastImport) {
+    if (!kIsWeb) return;
+
+    _webReminderTimer?.cancel();
+    _webReminderTimer = null;
+
+    final scheduledAt = lastImport.add(_importReminderDelay);
+    final now = DateTime.now();
+
+    if (scheduledAt.isBefore(now)) {
+      // Already passed, show immediately
+      _maybeShowWebReminder(lastImport);
+    } else {
+      // Schedule for later
+      final delay = scheduledAt.difference(now);
+      _webReminderTimer = Timer(delay, () {
+        _maybeShowWebReminder(lastImport);
+      });
+    }
+  }
+
+  void _scheduleImportReminder(DateTime lastImport) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = navigatorKey.currentContext;
+      if (context == null) return;
+
+      final l10n = AppLocalizations.of(context);
+      if (l10n == null) return;
+
+      NotificationService.instance.scheduleImportReminder(
+        lastImportDate: lastImport,
+        title: l10n.importReminderTitle,
+        body: l10n.importReminderBody,
+      );
+    });
+  }
+
+  void _maybeShowWebReminder(DateTime lastImport) {
+    if (!kIsWeb || _webReminderShown) return;
+
+    final elapsed = DateTime.now().difference(lastImport);
+    if (elapsed < _importReminderDelay) return;
+
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) return;
+
+    _webReminderShown = true;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${l10n.importReminderTitle} ${l10n.importReminderBody}'),
+        duration: const Duration(days: 365),
+        action: SnackBarAction(
+          label: '✕',
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ),
+    );
+  }
+
+  bool _isSameMoment(DateTime a, DateTime b) {
+    return a.toUtc().isAtSameMomentAs(b.toUtc());
+  }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _intentSubscription?.cancel();
+    _webReminderTimer?.cancel();
+    _importProvider.removeListener(_handleImportUpdates);
     _importProvider.dispose();
     super.dispose();
   }
