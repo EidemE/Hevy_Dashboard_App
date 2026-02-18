@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../features/dashboard/dashboard_page.dart';
 import '../../features/dashboard/monthly_stats_page.dart';
 import '../../features/import/import_page.dart';
-import '../../l10n/app_localizations.dart';
 import '../../features/exercises/exercises_page.dart';
+import '../../l10n/app_localizations.dart';
 
 class AppRouter {
   static const String dashboard = '/';

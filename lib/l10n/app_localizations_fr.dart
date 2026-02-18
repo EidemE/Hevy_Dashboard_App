@@ -234,9 +234,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get all => 'Toutes';
 
   @override
-  String get kg => 'kg';
-
-  @override
   String get reps => 'reps';
 
   @override

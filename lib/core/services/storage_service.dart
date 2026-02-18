@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/csv_data.dart';
 import '../models/exercise_stats.dart';
+import '../models/weight_unit.dart';
 
 class StorageService {
   static const String _csvDataKey = 'csv_data';
   static const String _exerciseStatsKey = 'exercise_stats';
+  static const String _weightUnitKey = 'weight_unit';
 
-  // Sauvegarder les données CSV
+  // Save CSV data
   Future<void> saveCsvData(List<CsvData> data) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -15,14 +17,14 @@ class StorageService {
       final String jsonString = jsonEncode(jsonList);
       await prefs.setString(_csvDataKey, jsonString);
     } catch (e) {
-      throw Exception('Erreur lors de la sauvegarde: $e');
+      throw Exception('Error during backup: $e');
     }
   }
 
-  // Charger les données CSV
+  // Load CSV data
   Future<List<CsvData>> loadCsvData() async {
     try {
-      // Forcer un reload pour avoir les données les plus récentes
+      // Force a reload to get the most recent data
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.reload();
       
@@ -37,24 +39,25 @@ class StorageService {
           .map((dynamic json) => CsvData.fromJson(json as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw Exception('Erreur lors du chargement: $e');
+      throw Exception('Error during loading: $e');
     }
   }
 
-  // Effacer toutes les données
+  // Clear all data
   Future<void> clearCsvData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(_csvDataKey);
     await prefs.remove(_exerciseStatsKey);
+    await prefs.remove(_weightUnitKey);
   }
 
-  // Vérifier si des données existent
+  // Check whether data exists
   Future<bool> hasCsvData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.containsKey(_csvDataKey);
   }
 
-  // Sauvegarder les statistiques d'exercices
+  // Save exercise statistics
   Future<void> saveExerciseStats(List<ExerciseStats> stats) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -63,11 +66,11 @@ class StorageService {
       final String jsonString = jsonEncode(jsonList);
       await prefs.setString(_exerciseStatsKey, jsonString);
     } catch (e) {
-      throw Exception('Erreur lors de la sauvegarde des stats: $e');
+      throw Exception('Error during stats save: $e');
     }
   }
 
-  // Charger les statistiques d'exercices
+  // Load exercise statistics
   Future<List<ExerciseStats>> loadExerciseStats() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -85,7 +88,28 @@ class StorageService {
               ExerciseStats.fromJson(json as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw Exception('Erreur lors du chargement des stats: $e');
+      throw Exception('Error during stats loading: $e');
+    }
+  }
+
+  Future<void> saveWeightUnit(WeightUnit unit) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_weightUnitKey, unit.name);
+    } catch (e) {
+      throw Exception('Error during weight unit save: $e');
+    }
+  }
+
+  Future<WeightUnit> loadWeightUnit() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.reload();
+
+      final String? rawValue = prefs.getString(_weightUnitKey);
+      return WeightUnitParsing.fromStorageValue(rawValue);
+    } catch (e) {
+      throw Exception('Error during weight unit loading: $e');
     }
   }
 }

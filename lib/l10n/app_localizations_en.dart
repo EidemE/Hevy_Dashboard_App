@@ -233,9 +233,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get all => 'All';
 
   @override
-  String get kg => 'kg';
-
-  @override
   String get reps => 'reps';
 
   @override

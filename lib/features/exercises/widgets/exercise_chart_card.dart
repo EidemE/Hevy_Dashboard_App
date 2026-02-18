@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:provider/provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../core/models/exercise_stats.dart';
 import '../../../core/models/csv_data.dart';
 import '../../../core/models/set.dart' as exercise_set;
 import '../../../widgets/exercise_stats_header.dart';
 import '../../../core/utils/exercise_utils.dart';
+import '../../import/providers/import_provider.dart';
 
 class ExerciseChartCard extends StatefulWidget {
   final ExerciseStats stats;
@@ -28,6 +30,11 @@ class _ExerciseChartCardState extends State<ExerciseChartCard> {
   String? _selectedYear;
   bool _initialized = false;
   bool _isMobile = false;
+
+  String _weightUnitLabel(BuildContext context) {
+    final provider = Provider.of<ImportProvider>(context, listen: false);
+    return provider.weightUnitLabel;
+  }
 
   // Exercise type flags
   bool get _isDualChart => ExerciseUtils.isDualChart(widget.stats.name);
@@ -481,7 +488,7 @@ class _ExerciseChartCardState extends State<ExerciseChartCard> {
                       const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
                       children: [
                         TextSpan(
-                          text: '${closestPoint.maxWeight.toStringAsFixed(1)} ${AppLocalizations.of(context)!.kg}\n',
+                          text: '${closestPoint.maxWeight.toStringAsFixed(1)} ${_weightUnitLabel(context)}\n',
                           style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 12),
                         ),
                         TextSpan(
@@ -522,7 +529,7 @@ class _ExerciseChartCardState extends State<ExerciseChartCard> {
               reservedSize: 45,
               getTitlesWidget: (value, meta) {
                 return Text(
-                  '${value.toStringAsFixed(0)} ${AppLocalizations.of(context)!.kg}',
+                  '${value.toStringAsFixed(0)} ${_weightUnitLabel(context)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10, color: Colors.blue),
                 );
               },
@@ -571,7 +578,7 @@ class _ExerciseChartCardState extends State<ExerciseChartCard> {
                     AppLocalizations.of(context)!.localeName,
                   ).format(closestPoint.date);
                   return LineTooltipItem(
-                    '$date\n${closestPoint.maxWeight.toStringAsFixed(1)} ${AppLocalizations.of(context)!.kg}',
+                    '$date\n${closestPoint.maxWeight.toStringAsFixed(1)} ${_weightUnitLabel(context)}',
                     const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -596,7 +603,7 @@ class _ExerciseChartCardState extends State<ExerciseChartCard> {
               reservedSize: 45,
               getTitlesWidget: (value, meta) {
                 return Text(
-                  '${value.toStringAsFixed(0)} ${AppLocalizations.of(context)!.kg}',
+                  '${value.toStringAsFixed(0)} ${_weightUnitLabel(context)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10),
                 );
               },
