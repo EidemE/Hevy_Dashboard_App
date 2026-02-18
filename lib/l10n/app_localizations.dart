@@ -524,12 +524,6 @@ abstract class AppLocalizations {
   /// **'All'**
   String get all;
 
-  /// No description provided for @kg.
-  ///
-  /// In en, this message translates to:
-  /// **'kg'**
-  String get kg;
-
   /// No description provided for @reps.
   ///
   /// In en, this message translates to:

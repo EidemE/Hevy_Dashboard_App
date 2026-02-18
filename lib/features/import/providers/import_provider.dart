@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../core/models/csv_data.dart';
 import '../../../core/models/exercise_stats.dart';
+import '../../../core/models/weight_unit.dart';
 import '../../../core/services/csv_service.dart';
 import '../../../core/services/stats_service.dart';
 import '../../../core/services/storage_service.dart';
@@ -38,6 +39,7 @@ class ImportProvider extends ChangeNotifier {
   bool _isLoading = false;
   ImportErrorType? _errorType;
   DateTime? _lastImportDate;
+  WeightUnit _weightUnit = WeightUnit.kg;
 
   List<CsvData> get data => _data;
   List<ExerciseStats> get exerciseStats => _exerciseStats;
@@ -45,6 +47,14 @@ class ImportProvider extends ChangeNotifier {
   ImportErrorType? get errorType => _errorType;
   DateTime? get lastImportDate => _lastImportDate;
   bool get hasData => _data.isNotEmpty;
+  WeightUnit get weightUnit => _weightUnit;
+  String get weightUnitLabel => _weightUnit.name;
+  double get tonsDivisor => _weightUnit == WeightUnit.lb ? 2000.0 : 1000.0;
+  String get tonsUnitLabel => _weightUnit == WeightUnit.lb ? 'ton' : 't';
+
+  void _setWeightUnit(WeightUnit unit) {
+    _weightUnit = unit;
+  }
 
   // Charger les données au démarrage
   Future<void> loadSavedData() async {
@@ -55,6 +65,7 @@ class ImportProvider extends ChangeNotifier {
     try {
       _data = await _storageService.loadCsvData();
       _exerciseStats = await _storageService.loadExerciseStats();
+      _setWeightUnit(await _storageService.loadWeightUnit());
       if (_data.isNotEmpty) {
         _lastImportDate = _data.first.importedAt;
       }
@@ -66,6 +77,7 @@ class ImportProvider extends ChangeNotifier {
       _data = [];
       _exerciseStats = [];
       _lastImportDate = null;
+      _setWeightUnit(WeightUnit.kg);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -118,8 +130,10 @@ class ImportProvider extends ChangeNotifier {
 
       // Sauvegarder (écrase les données précédentes)
       _data = parsedData;
+      _setWeightUnit(_data.first.weightUnit);
       _lastImportDate = DateTime.now();
       await _storageService.saveCsvData(_data);
+      await _storageService.saveWeightUnit(_weightUnit);
 
       // Calculer et sauvegarder les statistiques d'exercices
       _exerciseStats = _statsService.calculateExerciseStats(_data);
@@ -162,8 +176,10 @@ class ImportProvider extends ChangeNotifier {
 
       // Sauvegarder
       _data = parsedData;
+      _setWeightUnit(_data.first.weightUnit);
       _lastImportDate = DateTime.now();
       await _storageService.saveCsvData(_data);
+      await _storageService.saveWeightUnit(_weightUnit);
 
       // Calculer et sauvegarder les statistiques
       _exerciseStats = _statsService.calculateExerciseStats(_data);
@@ -191,6 +207,7 @@ class ImportProvider extends ChangeNotifier {
       _data = [];
       _exerciseStats = [];
       _lastImportDate = null;
+      _setWeightUnit(WeightUnit.kg);
       _errorType = null;
     } catch (e) {
       _errorType = ImportErrorType.generic;

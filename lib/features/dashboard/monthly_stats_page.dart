@@ -48,7 +48,7 @@ class _MonthlyStatsPageState extends State<MonthlyStatsPage> {
                         ),
                   ),
                   const SizedBox(height: 12),
-                  _buildChart(monthlyStats),
+                  _buildChart(monthlyStats, provider),
                   const SizedBox(height: 18),
                   LayoutBuilder(
                     builder: (context, constraints) {
@@ -66,6 +66,7 @@ class _MonthlyStatsPageState extends State<MonthlyStatsPage> {
                               child: _buildMonthCard(
                                 context,
                                 stat,
+                                provider,
                                 isSingleColumn: true,
                               ),
                             );
@@ -87,6 +88,7 @@ class _MonthlyStatsPageState extends State<MonthlyStatsPage> {
                           return _buildMonthCard(
                             context,
                             monthlyStats[index],
+                            provider,
                             isSingleColumn: false,
                           );
                         },
@@ -102,7 +104,7 @@ class _MonthlyStatsPageState extends State<MonthlyStatsPage> {
     );
   }
 
-  Widget _buildChart(List<MonthStat> stats) {
+  Widget _buildChart(List<MonthStat> stats, ImportProvider provider) {
     if (stats.isEmpty) return const SizedBox.shrink();
 
     return Container(
@@ -204,7 +206,7 @@ class _MonthlyStatsPageState extends State<MonthlyStatsPage> {
                                 value = stat.avgExercises.toStringAsFixed(1);
                                 break;
                               case 'avgWeight':
-                                value = '${stat.avgWeight.toStringAsFixed(0)} ${localizations.kg}';
+                                value = '${stat.avgWeight.toStringAsFixed(0)} ${provider.weightUnitLabel}';
                                 break;
                               default:
                                 value = spot.y.toInt().toString();
@@ -470,7 +472,12 @@ class _MonthlyStatsPageState extends State<MonthlyStatsPage> {
     return stats.reversed.toList();
   }
 
-  Widget _buildMonthCard(BuildContext context, MonthStat stat, {required bool isSingleColumn}) {
+  Widget _buildMonthCard(
+    BuildContext context,
+    MonthStat stat,
+    ImportProvider provider,
+    {required bool isSingleColumn}
+  ) {
     final monthFormat = DateFormat('MMMM yyyy', AppLocalizations.of(context)!.localeName);
     final monthName = monthFormat.format(stat.month);
     final capitalizedMonth = monthName[0].toUpperCase() + monthName.substring(1);
@@ -482,7 +489,7 @@ class _MonthlyStatsPageState extends State<MonthlyStatsPage> {
       _buildCompactStatRow(context, Icons.schedule, AppLocalizations.of(context)!.avgTime, _formatDuration(stat.avgTime.round())),
       _buildCompactStatRow(context, Icons.category_outlined, AppLocalizations.of(context)!.differentExercisesShort, stat.uniqueExercises.toString()),
       _buildCompactStatRow(context, Icons.format_list_numbered, AppLocalizations.of(context)!.exercisesPerSession, stat.avgExercises.toStringAsFixed(1)),
-      _buildCompactStatRow(context, Icons.scale, AppLocalizations.of(context)!.avgWeightPerSession, '${stat.avgWeight.toStringAsFixed(0)} ${AppLocalizations.of(context)!.kg}'),
+      _buildCompactStatRow(context, Icons.scale, AppLocalizations.of(context)!.avgWeightPerSession, '${stat.avgWeight.toStringAsFixed(0)} ${provider.weightUnitLabel}'),
     ];
 
     Widget contentWidget;

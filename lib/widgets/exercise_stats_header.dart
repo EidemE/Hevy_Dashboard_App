@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../core/models/exercise_stats.dart';
 import '../core/utils/exercise_utils.dart';
+import '../features/import/providers/import_provider.dart';
 
 class ExerciseStatsHeader extends StatelessWidget {
   final ExerciseStats stats;
@@ -118,7 +120,9 @@ class ExerciseStatsHeader extends StatelessWidget {
   }
 
   String _formatWeight(BuildContext context, double weight, String exerciseName) {
-    final label = '${weight.toStringAsFixed(1)} ${AppLocalizations.of(context)!.kg}';
+    final provider = Provider.of<ImportProvider>(context, listen: false);
+    final unitLabel = provider.weightUnitLabel;
+    final label = '${weight.toStringAsFixed(1)} $unitLabel';
     if (ExerciseUtils.isWeighted(exerciseName)) return '+$label';
     return label;
   }
@@ -127,11 +131,15 @@ class ExerciseStatsHeader extends StatelessWidget {
     if (ExerciseUtils.isDualChart(exerciseName) || totalWeight == 0) {
       return '-';
     }
-    
-    if (totalWeight >= 1000) {
-      return '${(totalWeight / 1000).toStringAsFixed(1)} t';
+
+    final provider = Provider.of<ImportProvider>(context, listen: false);
+    final tonsDivisor = provider.tonsDivisor;
+    final tonsUnitLabel = provider.tonsUnitLabel;
+    if (totalWeight >= tonsDivisor) {
+      return '${(totalWeight / tonsDivisor).toStringAsFixed(1)} $tonsUnitLabel';
     }
-    return '${totalWeight.toStringAsFixed(0)} ${AppLocalizations.of(context)!.kg}';
+    final unitLabel = provider.weightUnitLabel;
+    return '${totalWeight.toStringAsFixed(0)} $unitLabel';
   }
 
   String _formatDate(BuildContext context, DateTime date) {

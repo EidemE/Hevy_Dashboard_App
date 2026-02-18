@@ -160,10 +160,13 @@ class DashboardPage extends StatelessWidget {
               }
               
               String weightValue;
-              if (totalWeight >= 1000) {
-                weightValue = '${(totalWeight / 1000).toStringAsFixed(1)} t';
+              final weightUnitLabel = provider.weightUnitLabel;
+              final tonsDivisor = provider.tonsDivisor;
+              final tonsUnitLabel = provider.tonsUnitLabel;
+              if (totalWeight >= tonsDivisor) {
+                weightValue = '${(totalWeight / tonsDivisor).toStringAsFixed(1)} $tonsUnitLabel';
               } else {
-                weightValue = '${totalWeight.toStringAsFixed(0)} ${AppLocalizations.of(context)!.kg}';
+                weightValue = '${totalWeight.toStringAsFixed(0)} $weightUnitLabel';
               }
               
               final cards = [
@@ -441,6 +444,7 @@ class DashboardPage extends StatelessWidget {
       : 0.0;
     final prev30TotalWeight = previous30Workouts.fold<double>(0, (sum, w) => sum + w.totalWeight);
     final prev30AvgWeight = prev30Count > 0 ? prev30TotalWeight / prev30Count : 0.0;
+    final weightUnitLabel = provider.weightUnitLabel;
 
     return Container(
       decoration: BoxDecoration(
@@ -537,10 +541,10 @@ class DashboardPage extends StatelessWidget {
             _buildStatRow(
               context,
               AppLocalizations.of(context)!.avgWeightPerSession,
-              '${last30AvgWeight.toStringAsFixed(0)} ${AppLocalizations.of(context)!.kg}',
+              '${last30AvgWeight.toStringAsFixed(0)} $weightUnitLabel',
               prev30AvgWeight,
               last30AvgWeight,
-              '${prev30AvgWeight.toStringAsFixed(0)} ${AppLocalizations.of(context)!.kg}',
+              '${prev30AvgWeight.toStringAsFixed(0)} $weightUnitLabel',
               isHigherBetter: true,
             ),
           ],

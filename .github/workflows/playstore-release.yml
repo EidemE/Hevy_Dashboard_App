@@ -67,3 +67,4 @@ jobs:
           track: ${{ env.TRACK }}
           releaseName: ${{ env.RELEASE_NAME }}
           status: completed
+          changesNotSentForReview: false

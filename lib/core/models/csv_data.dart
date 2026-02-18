@@ -2,13 +2,19 @@ import 'package:intl/intl.dart';
 import 'workout.dart';
 import 'exercise.dart';
 import 'set.dart';
+import 'weight_unit.dart';
 import '../utils/exercise_utils.dart';
 
 class CsvData {
   final List<Workout> workouts;
   final DateTime importedAt;
+  final WeightUnit weightUnit;
 
-  CsvData({required this.workouts, required this.importedAt});
+  CsvData({
+    required this.workouts,
+    required this.importedAt,
+    this.weightUnit = WeightUnit.kg,
+  });
 
   // JSON serialization
   Map<String, dynamic> toJson() {
@@ -42,6 +48,7 @@ class CsvData {
           )
           .toList(),
       'importedAt': importedAt.toIso8601String(),
+      'weightUnit': weightUnit.name,
     };
   }
 
@@ -84,6 +91,7 @@ class CsvData {
         );
       }).toList(),
       importedAt: DateTime.parse(json['importedAt'] as String),
+      weightUnit: WeightUnitParsing.fromStorageValue(json['weightUnit'] as String?),
     );
   }
 
@@ -127,6 +135,10 @@ class CsvData {
 
   // CSV parsing
   factory CsvData.fromCsv(List<String> headers, List<List<dynamic>> dataRows) {
+    final WeightUnit weightUnit = WeightUnitParsing.fromCsvWeightHeader(
+      headers[9],
+    );
+
     List<Workout> workouts = [];
     Workout? currentWorkout;
 
@@ -185,6 +197,10 @@ class CsvData {
       workouts.add(currentWorkout);
     }
 
-    return CsvData(workouts: workouts, importedAt: DateTime.now());
+    return CsvData(
+      workouts: workouts,
+      importedAt: DateTime.now(),
+      weightUnit: weightUnit,
+    );
   }
 }
